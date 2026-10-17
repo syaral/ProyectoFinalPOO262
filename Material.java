@@ -1,5 +1,5 @@
 // Esta clase se encarga de manejar el material (filamento) de la impresión.
-// Guarda los gramos usados y calcula cuánto cuesta ese filamento.
+// Guarda los gramos usados y calcula cuánto cuesta ese filamento. 
 public class Material {
 
 // --- Constantes del material ---
