@@ -1,9 +1,11 @@
+package modelo;
+
 public class Energia {
     private static final double COSTO_KW = 2000; // costo por kW
     private static final double GASTO_KW_HORA = 0.3; // consumo de la impresora en kW por hora
     private final int tiempoMinutos;
 
-    public Energia(int tiempoMinutos) { 
+    public Energia(int tiempoMinutos) {
         this.tiempoMinutos = tiempoMinutos;
     }
 

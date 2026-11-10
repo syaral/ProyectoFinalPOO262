@@ -1,3 +1,7 @@
+package servicio;
+
+import modelo.Pedido;
+
 public class ResumenDia {
     private int pedidosAtendidos;
     private double totalVendido;

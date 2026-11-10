@@ -1,3 +1,5 @@
+package modelo;
+
 public class Placas {
     private final Energia energia; // composición: la placa tiene un objeto Energia que calcula el cobro de la luz
     private final Material material; // composición: la placa tiene un objeto Material que calcula el cobro del filamento
@@ -9,9 +11,9 @@ public class Placas {
         this.incluirFilamento = incluirFilamento;
     }
 
-    public Energia getEnergia() { 
+    public Energia getEnergia() {
         return energia; }
-    public Material getMaterial() { 
+    public Material getMaterial() {
         return material; }
 
     public double costoBasePlaca() {
