@@ -1,21 +1,31 @@
-import java.util.Scanner;
+package app;
 
-// Clase principal para ejecutar la consola del sistema de impresión 3D
+import java.util.Scanner;
+import modelo.Pedido;
+import servicio.Agenda;
+import servicio.Catalogo;
+import servicio.CrearPedido;
+import servicio.ResumenDia;
+
 public class Main {
+
+    // Lee un entero; si el usuario escribe otra cosa, devuelve 0 (opción inválida)
+    private static int leerEntero(Scanner sc) {
+        if (sc.hasNextInt()) {
+            return sc.nextInt();
+        }
+        sc.next();
+        return 0;
+    }
+
     public static void main(String[] args) {
-// Objeto Scanner para leer la entrada de teclado
         Scanner sc = new Scanner(System.in);
-        
-// Bitácora contable donde se guardan los pedidos confirmados del día
         ResumenDia resumenDia = new ResumenDia();
-        
-// Contador para asignar un ID numérico único y consecutivo a cada pedido
+        Catalogo catalogo = new Catalogo();
+        Agenda agenda = new Agenda();
         int contadorPedidos = 0;
-        
-// Bandera para controlar la ejecución del menú interactivo
         boolean salir = false;
 
-// Bucle principal: se repite hasta que el usuario elija la opción de salir
         while (!salir) {
             System.out.println("\n=================================");
             System.out.println("   SISTEMA DE IMPRESIÓN 3D");
@@ -23,53 +33,32 @@ public class Main {
             System.out.println("1. Registrar nuevo pedido");
             System.out.println("2. Cotización de pedido");
             System.out.println("3. Ver resumen del día");
-            System.out.println("4. Salir");
+            System.out.println("4. Catálogo de materiales");
+            System.out.println("5. Agenda de la impresora");
+            System.out.println("6. Salir");
             System.out.print("Seleccione una opción: ");
 
-// Validación de la opción elegida para evitar que la aplicación falle si meten letras
-            int opcion = 0;
-            if (sc.hasNextInt()) {
-                opcion = sc.nextInt();
-            } else {
-                sc.next(); // Limpia la entrada no válida; la opción queda en 0 para entrar a 'default'
-            }
+            int opcion = leerEntero(sc);
 
             switch (opcion) {
                 case 1:
-// Opción 1: Registro directo de un pedido confirmado por el cliente
                     System.out.println("\n=== REGISTRAR NUEVO PEDIDO ===");
-                    
-// Se crea el pedido asignándole el siguiente ID consecutivo
                     Pedido pedidoRegistrar = CrearPedido.nuevoPedido(sc, contadorPedidos + 1);
                     contadorPedidos++;
-                    
-// Se ingresa a la lista del resumen del día
                     resumenDia.registrarPedido(pedidoRegistrar);
-                    
                     System.out.println("\n=== PEDIDO REGISTRADO CON ÉXITO ===");
                     System.out.println(pedidoRegistrar);
                     break;
 
                 case 2:
-// Opción 2: Cotización rápida sin compromiso
                     System.out.println("\n=== COTIZACIÓN DE PEDIDO ===");
-                    
-// Se calcula la cotización con la misma lógica del pedido
                     Pedido pedidoCotizado = CrearPedido.nuevoPedido(sc, contadorPedidos + 1);
                     System.out.println("\n=== RESUMEN DE COTIZACIÓN ===");
                     System.out.println(pedidoCotizado);
 
-// Se le pregunta al cliente si decide confirmar la compra
                     System.out.print("\n¿Desea registrar esta cotización como pedido en el día de hoy? (1. Sí, 2. No): ");
-                    int respuesta = 0;
-                    if (sc.hasNextInt()) {
-                        respuesta = sc.nextInt();
-                    } else {
-                        sc.next();
-                    }
+                    int respuesta = leerEntero(sc);
 
-// Si confirma (1), aumenta el contador de pedidos y lo guarda en el resumen del día
-// Si no confirma (2), la cotización se descarta de la memoria para no alterar las cuentas
                     if (respuesta == 1) {
                         contadorPedidos++;
                         resumenDia.registrarPedido(pedidoCotizado);
@@ -82,24 +71,73 @@ public class Main {
                     break;
 
                 case 3:
- // Opción 3: Consulta del total acumulado y lista de pedidos del día
                     System.out.println("\n" + resumenDia);
                     break;
 
-                case 4:
- // Opción 4: Finaliza la ejecución del sistema
+                case 4: {
+                    System.out.println("\n=== CATÁLOGO DE MATERIALES ===");
+                    System.out.println(catalogo.listar());
+                    System.out.print("Escriba parte del nombre para buscar (o 0 para volver): ");
+                    String texto = sc.next();
+                    if (!texto.equals("0")) {
+                        System.out.println(catalogo.buscar(texto));
+                    }
+                    break;
+                }
+
+                case 5: {
+                    System.out.println("\n=== AGENDA DE LA IMPRESORA ===");
+                    System.out.println(agenda.mostrar());
+                    System.out.println("\n1. Consultar turno");
+                    System.out.println("2. Reservar turno");
+                    System.out.println("3. Liberar turno");
+                    System.out.println("4. Poner en mantenimiento");
+                    System.out.println("5. Volver");
+                    System.out.print("Seleccione una acción: ");
+                    int accion = leerEntero(sc);
+
+                    if (accion >= 1 && accion <= 4) {
+                        System.out.print("Fila (día, 1-5): ");
+                        int fila = leerEntero(sc);
+                        System.out.print("Columna (franja, 1-3): ");
+                        int columna = leerEntero(sc);
+
+                        switch (accion) {
+                            case 1:
+                                System.out.println(agenda.consultar(fila, columna));
+                                break;
+                            case 2:
+                                System.out.print("Número del pedido a reservar: ");
+                                int numPedido = leerEntero(sc);
+                                if (numPedido >= 1 && numPedido <= contadorPedidos) {
+                                    System.out.println(agenda.reservar(fila, columna, numPedido));
+                                } else {
+                                    System.out.println("Ese pedido no está registrado.");
+                                }
+                                break;
+                            case 3:
+                                System.out.println(agenda.liberar(fila, columna));
+                                break;
+                            default:
+                                System.out.println(agenda.mantenimiento(fila, columna));
+                                break;
+                        }
+                    } else if (accion != 5) {
+                        System.out.println("Acción no válida.");
+                    }
+                    break;
+                }
+
+                case 6:
                     salir = true;
                     System.out.println("\n¡Gracias por usar el sistema!");
                     break;
 
                 default:
- // Captura opciones fuera del rango (1-4) o entradas inválidas
                     System.out.println("\nOpción no válida. Intente nuevamente.");
                     break;
             }
         }
-        
-// Cierre del Scanner para liberar recursos
         sc.close();
     }
 }
