@@ -6,11 +6,11 @@ y organiza la agenda semanal de la impresora.
 Proyecto de Programación Orientada a Objetos 2026-2, Universidad Nacional de Colombia.
 
 ## Integrantes
-- Nombre Apellido 1
-- Nombre Apellido 2
-- Nombre Apellido 3
-- Nombre Apellido 4
-- Nombre Apellido 5
+- Samuel Felipe Yara Lopez
+- Maria Lucia Moncaleano Mutis
+- Samuel Alejandro Tellez Luna
+- Miguel Angel Garzon Bohorquez
+- Yohan Esteban Sanchez Camacho
 
 ## Cómo correr el programa
 
